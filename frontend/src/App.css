@@ -1,0 +1,72 @@
+/* --- Modern Font & Base Styling --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  --primary-color: #4a90e2; /* A modern, friendly blue */
+  --secondary-color: #50e3c2; /* A vibrant accent teal */
+  --background-color: #f0f4f8; /* Soft grey-blue background */
+  --navbar-bg-start: #2c3e50; /* Deep blue gradient start */
+  --navbar-bg-end: #34495e; /* Deep blue gradient end */
+  --card-bg-color: #ffffff;
+  --text-color: #333;
+  --text-color-light: #ecf0f1;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* --- App Layout --- */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex-grow: 1;
+}
+
+/* --- Animated & Stylish Navbar --- */
+.navbar-custom {
+  background: linear-gradient(90deg, var(--navbar-bg-start), var(--navbar-bg-end));
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--text-color-light) !important;
+  transition: transform 0.3s ease-in-out; /* Animation transition */
+}
+
+/* Zoom-in & Zoom-out animation on hover */
+.navbar-brand:hover {
+  transform: scale(1.05);
+}
+
+.navbar-brand .brand-highlight {
+  color: var(--secondary-color);
+  font-weight: 700;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover, .nav-link.active {
+  color: #ffffff !important;
+}
+
+/* --- Polished Footer --- */
+.footer-custom {
+  background-color: var(--card-bg-color);
+  border-top: 1px solid #dee2e6;
+  padding: 1rem 0;
+  font-size: 0.9rem;
+}

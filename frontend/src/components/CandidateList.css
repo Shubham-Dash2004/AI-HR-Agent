@@ -1,0 +1,4 @@
+/* Make the dropdown button fill the available width for a cleaner look */
+.dropdown-toggle {
+  width: 100px; /* Or another width that you prefer */
+}
