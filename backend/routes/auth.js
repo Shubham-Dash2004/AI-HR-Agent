@@ -15,6 +15,7 @@ const scopes = [
   'https://www.googleapis.com/auth/gmail.readonly',
   'https://www.googleapis.com/auth/gmail.modify', // <-- ADD THIS LINE
   'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/calendar', // <-- ADD THIS SCOPE
 ];
 
 // 3. Route to start the authentication process

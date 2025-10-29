@@ -20,11 +20,20 @@ const CandidateSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Rejected'], // Predefined statuses
-    default: 'Applied', // Default status when a new candidate is created
+    enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Rejected', 'Interview Scheduled'], // Added new status
+    default: 'Applied',
   },
   resumeUrl: {
     type: String, // A link to the resume file (we'll use this later)
+  },
+   // --- NEW FIELDS ---
+  matchedJob: {
+    type: mongoose.Schema.Types.ObjectId, // A reference to a Job ID
+    ref: 'Job', // This tells Mongoose the ID belongs to the 'Job' collection
+  },
+   matchScore: {
+    type: Number, // The calculated score (e.g., 73)
+    default: 0,
   },
   receivedVia: {
     type: String,

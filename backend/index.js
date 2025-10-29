@@ -19,6 +19,7 @@ app.get('/', (req, res) => {
 // Define Routes
 app.use('/api/candidates', require('./routes/candidates')); // <-- Add this line
 app.use('/api/jobs', require('./routes/jobs')); // <-- Add this line
+app.use('/api/interviews', require('./routes/interviews')); // <-- Add this line
 app.use('/auth', require('./routes/auth')); // <-- Add this line
 app.use('/api/gmail', require('./routes/gmail')); // <-- Add this line
 

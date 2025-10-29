@@ -11,7 +11,6 @@ nlp = spacy.load("en_core_web_sm")
 app = Flask(__name__)
 
 # Pre-define a list of skills to look for
-# In a real application, this list would be much larger and could be stored in a database
 SKILLS_LIST = [
     "python", "javascript", "react", "react.js", "node.js", "nodejs",
     "mongodb", "sql", "mysql", "postgresql", "aws", "docker", "git",
@@ -19,32 +18,32 @@ SKILLS_LIST = [
     "typescript", "express", "tailwind", "bootstrap"
 ]
 
-# Initialize spaCy's Matcher with the shared vocabulary
+# Initialize spaCy's Matcher
 matcher = Matcher(nlp.vocab)
 
 # Create patterns for the matcher
-# We create case-insensitive patterns for each skill
 for skill in SKILLS_LIST:
-    # Handle skills with special characters like "c++" or "node.js"
-    # This creates a pattern that matches the skill as a single token
-    pattern = [{"LOWER": skill.replace(".", "_").replace(" ", "_").replace("+", "p")}]
+    pattern = [{"LOWER": skill}]
     matcher.add(skill, [pattern])
-    
-    # Optional: handle multi-word skills if needed, e.g., "machine learning"
-    if " " in skill:
-        pattern_multi = [{"LOWER": t} for t in skill.split()]
-        matcher.add(skill, [pattern_multi])
-
 
 def extract_details(text):
     doc = nlp(text)
     name, email, phone = None, None, None
 
-    # Extract Name (find the first PERSON entity)
+    # Improved Name Extraction
+    # Method 1: Look for a PERSON entity near the top of the resume.
     for ent in doc.ents:
-        if ent.label_ == "PERSON" and not name:
+        if ent.label_ == "PERSON" and ent.start_char < 200:
             name = ent.text
             break
+    
+    # Method 2 (Fallback): If no PERSON found, grab the first sensible line.
+    if not name:
+        lines = [line for line in text.split('\n') if line.strip()]
+        if lines:
+            potential_name = lines[0].strip()
+            if not any(char.isdigit() for char in potential_name) and len(potential_name) > 2:
+                name = potential_name
             
     # Extract Email using regex
     email_match = re.search(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", text)
@@ -58,9 +57,8 @@ def extract_details(text):
     
     # Use the matcher to find skills
     matches = matcher(doc)
-    found_skills = set()  # Use a set to avoid duplicate skills
+    found_skills = set()
     for match_id, start, end in matches:
-        # Get the original skill string from the match_id (which we set as the skill name)
         skill_name = nlp.vocab.strings[match_id]
         found_skills.add(skill_name)
 
@@ -68,7 +66,7 @@ def extract_details(text):
         "name": name,
         "email": email,
         "phone": phone,
-        "skills": list(found_skills)  # Convert the set back to a list
+        "skills": list(found_skills)
     }
 
 @app.route('/parse', methods=['POST'])

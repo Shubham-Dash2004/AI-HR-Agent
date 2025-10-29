@@ -42,7 +42,32 @@ async function generateInitialReply(candidateName) {
   }
 }
 
-// 5. Export the function
+async function generateInterviewInvitation(candidateName, schedulingLink) {
+  try {
+    console.log(`Generating interview invitation for ${candidateName}...`);
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a friendly and professional HR assistant. Your tone is enthusiastic and encouraging. The goal is to get the candidate excited to schedule an interview.',
+        },
+        {
+          role: 'user',
+          content: `Generate a short email inviting a candidate named ${candidateName} to schedule an interview. Congratulate them on moving to the next stage. Tell them we were impressed with their background. Ask them to choose a convenient time for the interview by clicking the link provided. The link is: ${schedulingLink}`,
+        },
+      ],
+      model: 'llama-3.1-8b-instant',
+    });
+    
+    return chatCompletion.choices[0]?.message?.content || `Congratulations! We'd like to invite you to an interview. Please schedule a time here: ${schedulingLink}`;
+  } catch (error) {
+    console.error('Error generating interview invitation:', error);
+    return `Hi ${candidateName},\n\nCongratulations! We were very impressed with your application and would like to invite you to the next stage: an interview with our team.\n\nPlease use the link below to select a time that works best for you:\n${schedulingLink}\n\nWe look forward to speaking with you soon.\n\nBest regards,\nHR Team`;
+  }
+}
+
+// At the bottom, export the new function
 module.exports = {
   generateInitialReply,
+  generateInterviewInvitation, // <-- Export new function
 };

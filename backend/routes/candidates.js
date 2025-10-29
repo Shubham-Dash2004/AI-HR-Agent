@@ -3,14 +3,13 @@ const router = express.Router();
 const Candidate = require('../models/Candidate'); // Import the Candidate model
 
 
-// --- NEW ROUTE ---
 // @route   GET /api/candidates
-// @desc    Get all candidates
-// @access  Public
 router.get('/', async (req, res) => {
   try {
-    // Find all candidates and sort them by creation date (newest first)
-    const candidates = await Candidate.find().sort({ createdAt: -1 });
+    // --- MODIFIED: Use .populate() to include job details ---
+    const candidates = await Candidate.find()
+      .populate('matchedJob', 'title') // <-- Find the job with the stored ID and include only its 'title' field
+      .sort({ createdAt: -1 });
     res.json(candidates);
   } catch (err) {
     console.error(err.message);
